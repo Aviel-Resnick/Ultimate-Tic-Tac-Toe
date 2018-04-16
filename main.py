@@ -12,18 +12,27 @@ def getMove(currentPlayer):
     x = input("Move: ")
     return x
 
-def boardEmpty():
-    for i in board:
+# If false game over
+def boardContainsEmpty():
+    for i in range(0, len(board)):
         if board[i] == "-":
-            return False
+            return(True)
 
-    return True
+    return False
 
+def drawBoard(board):
+    x = 0
+    while(x <= len(board) - 1):
+        print(board[x], board[x + 1], board[x + 2])
+        x = x + 3
+
+def endGame():
+    print("The game is over.")
 
 def main(board, gameOver, moveNumber, currentPlayer):
     # Make sure game is still going on
     while gameOver != True:
-        print(board)
+        drawBoard(board)
 
         # Check whose move it is
         if moveNumber % 2 == 0:
@@ -31,12 +40,15 @@ def main(board, gameOver, moveNumber, currentPlayer):
         else:
             currentPlayer = "o"
 
+        if boardContainsEmpty() == False:
+            endGame()
+            break
+
         board[int(getMove(currentPlayer))] = currentPlayer
 
         moveNumber += 1
 
-    if boardEmpty() == False:
+    if boardContainsEmpty() == False:
         gameOver = True
-
 
 main(board, gameOver, moveNumber, currentPlayer)
