@@ -20,6 +20,12 @@ def boardContainsEmpty():
 
     return False
 
+def spaceEmpty(space):
+    if board[space] == "-":
+        return True
+    else:
+        return False
+
 def drawBoard(board):
     x = 0
     while(x <= len(board) - 1):
@@ -33,6 +39,8 @@ def main(board, gameOver, moveNumber, currentPlayer):
     # Make sure game is still going on
     while gameOver != True:
         drawBoard(board)
+        validMove = False
+        move = int(getMove(currentPlayer))
 
         # Check whose move it is
         if moveNumber % 2 == 0:
@@ -44,7 +52,14 @@ def main(board, gameOver, moveNumber, currentPlayer):
             endGame()
             break
 
-        board[int(getMove(currentPlayer))] = currentPlayer
+        while spaceEmpty(move) == False:
+            validMove = spaceEmpty(move)
+
+            if validMove == False:
+                print("Illegal Move")
+                move = int(getMove(currentPlayer))
+
+        board[move] = currentPlayer
 
         moveNumber += 1
 
