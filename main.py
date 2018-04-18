@@ -26,7 +26,7 @@ def spaceEmpty(space):
     else:
         return False
 
-def drawBoard(board):
+def drawBoard():
     x = 0
     while(x <= len(board) - 1):
         print(board[x], board[x + 1], board[x + 2])
@@ -35,10 +35,38 @@ def drawBoard(board):
 def endGame():
     print("The game is over.")
 
+def checkWin():
+    if board[0] == board[1] == board[2]:
+        if spaceEmpty(0) == False and spaceEmpty(1) == False and spaceEmpty(2) == False:
+            return True
+    if board[3] == board[4] == board[5]:
+        if spaceEmpty(3) == False and spaceEmpty(4) == False and spaceEmpty(5) == False:
+            return True
+    if board[6] == board[7] == board[8]:
+        if spaceEmpty(6) == False and spaceEmpty(7) == False and spaceEmpty(8) == False:
+            return True
+    if board[0] == board[3] == board[6]:
+        if spaceEmpty(0) == False and spaceEmpty(3) == False and spaceEmpty(6) == False:
+            return True
+    if board[1] == board[4] == board[7]:
+        if spaceEmpty(1) == False and spaceEmpty(4) == False and spaceEmpty(7) == False:
+            return True
+    if board[2] == board[5] == board[8]:
+        if spaceEmpty(2) == False and spaceEmpty(5) == False and spaceEmpty(8) == False:
+            return True
+    if board[0] == board[4] == board[8]:
+        if spaceEmpty(0) == False and spaceEmpty(4) == False and spaceEmpty(8) == False:
+            return True
+    if board[2] == board[4] == board[6]:
+        if spaceEmpty(2) == False and spaceEmpty(4) == False and spaceEmpty(6) == False:
+            return True
+    else:
+        return False
+    
 def main(board, gameOver, moveNumber, currentPlayer):
     # Make sure game is still going on
     while gameOver != True:
-        drawBoard(board)
+        drawBoard()
         validMove = False
         move = int(getMove(currentPlayer))
 
@@ -60,8 +88,19 @@ def main(board, gameOver, moveNumber, currentPlayer):
                 move = int(getMove(currentPlayer))
 
         board[move] = currentPlayer
-
+    
         moveNumber += 1
+
+        if checkWin() == True:
+            drawBoard()
+
+            if currentPlayer == "x":
+                print("X Won")
+            else:
+                print("O Won")
+            
+            gameOver = True
+            endGame()
 
     if boardContainsEmpty() == False:
         gameOver = True
