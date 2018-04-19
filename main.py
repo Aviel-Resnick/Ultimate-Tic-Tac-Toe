@@ -1,108 +1,67 @@
 moveNumber = 0
-board = []
+board = [["-" for _ in range(3)] for _ in range(3)]
 gameOver = False
 currentPlayer = ""
 
-# Populate Board list with all empty characters
-for i in range (0,9):
-    board.append("-")
-
 # Asks and returns user input | int 0 - 8
 def getMove(currentPlayer):
-    x = input("Move: ")
-    return x
+    move = int(input("Move: "))
+    return (move - 1) // 3, (move - 1) % 3
 
-# If false game over
-def boardContainsEmpty():
-    for i in range(0, len(board)):
-        if board[i] == "-":
-            return(True)
-
-    return False
-
-def spaceEmpty(space):
-    if board[space] == "-":
-        return True
-    else:
-        return False
+def spaceEmpty(row, column):
+    return True if board[row][column] == "-" else False
 
 def drawBoard():
-    x = 0
-    while(x <= len(board) - 1):
-        print(board[x], board[x + 1], board[x + 2])
-        x = x + 3
+    for x in range(3):
+        print(board[x][0], board[x][1], board[x][2])
 
-def endGame():
-    print("The game is over.")
+def checkWin(row, column):
+    #Check the horizontal wins
+    if board[row][0] == board[row][1] == board[row][2] and not spaceEmpty(row, column):
+        return True
+    
+    #Check the vertical wins
+    if board[0][column] == board[1][column] == board[2][column] and not spaceEmpty(row, column):
+        return True
+    
+    #Check the diagonal wins
+    if board[0][0] == board[1][1] == board[2][2] and not spaceEmpty(0, 0):
+        return True
+		
+    if board[0][2] == board[1][1] == board[2][0] and not spaceEmpty(0, 2):
+        return True
 
-def checkWin():
-    if board[0] == board[1] == board[2]:
-        if spaceEmpty(0) == False and spaceEmpty(1) == False and spaceEmpty(2) == False:
-            return True
-    if board[3] == board[4] == board[5]:
-        if spaceEmpty(3) == False and spaceEmpty(4) == False and spaceEmpty(5) == False:
-            return True
-    if board[6] == board[7] == board[8]:
-        if spaceEmpty(6) == False and spaceEmpty(7) == False and spaceEmpty(8) == False:
-            return True
-    if board[0] == board[3] == board[6]:
-        if spaceEmpty(0) == False and spaceEmpty(3) == False and spaceEmpty(6) == False:
-            return True
-    if board[1] == board[4] == board[7]:
-        if spaceEmpty(1) == False and spaceEmpty(4) == False and spaceEmpty(7) == False:
-            return True
-    if board[2] == board[5] == board[8]:
-        if spaceEmpty(2) == False and spaceEmpty(5) == False and spaceEmpty(8) == False:
-            return True
-    if board[0] == board[4] == board[8]:
-        if spaceEmpty(0) == False and spaceEmpty(4) == False and spaceEmpty(8) == False:
-            return True
-    if board[2] == board[4] == board[6]:
-        if spaceEmpty(2) == False and spaceEmpty(4) == False and spaceEmpty(6) == False:
-            return True
-    else:
-        return False
+    return False
+    
     
 def main(board, gameOver, moveNumber, currentPlayer):
     # Make sure game is still going on
     while gameOver != True:
         drawBoard()
         validMove = False
-        move = int(getMove(currentPlayer))
+        row, column = getMove(currentPlayer)
 
         # Check whose move it is
-        if moveNumber % 2 == 0:
-            currentPlayer = "x"
-        else:
-            currentPlayer = "o"
-
-        if boardContainsEmpty() == False:
-            endGame()
-            break
-
-        while spaceEmpty(move) == False:
-            validMove = spaceEmpty(move)
-
-            if validMove == False:
-                print("Illegal Move")
-                move = int(getMove(currentPlayer))
-
-        board[move] = currentPlayer
+        currentPlayer = "x" if moveNumber % 2 == 0 else "o"
+        
+        while spaceEmpty(row, column) == False:
+            print("Illegal Move")
+            row, column = getMove(currentPlayer)
+        
+        board[row][column] = currentPlayer
     
         moveNumber += 1
 
-        if checkWin() == True:
+        if checkWin(row, column) == True:
             drawBoard()
 
-            if currentPlayer == "x":
-                print("X Won")
-            else:
-                print("O Won")
+            print("X won") if currentPlayer == "x" else "o won"
             
             gameOver = True
-            endGame()
+            print("The game is over")
+            break
 
-    if boardContainsEmpty() == False:
-        gameOver = True
+        if moveNumber == 9:
+            print("The game is over.")
 
 main(board, gameOver, moveNumber, currentPlayer)
